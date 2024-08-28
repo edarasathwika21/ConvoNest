@@ -30,7 +30,7 @@ export const sendMessage=async (req,res)=>{
    // await newMessage.save()
    await Promise.all([conversation.save(),newMessage.save()])
    
-   res.status(201).json({newMessage})
+   res.status(201).json(newMessage)
 
 
    } catch (error) {
@@ -42,14 +42,14 @@ export const sendMessage=async (req,res)=>{
 
 export const getMessage=async(req,res)=>{
    try {
-      const{id:userToChatId}=req.params
+      const {id:userToChatId}=req.params
       const senderId=req.user._id
 
       const conversation=await Conversation.findOne({
          participants:{$all:[senderId,userToChatId]}
       }).populate("messages")
       if(!conversation)
-         res.status(200).json([])
+         return res.status(200).json([])
       const messages=conversation.messages
       res.status(200).json(messages)
 
